@@ -1,21 +1,22 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+
+app.use(bodyParser.json())
 
 const mockUserData=[
-    {name:'Mark'},
-    {name:'Jill'},
-    {name:'Franko'}
+	{name:'Mark'},
+	{name:'Jill'}
 ]
-app.get('/users', function(req,res){
-        res.json({
-            success: true,
-            message: 'successfully got users. WELLDONE!',
-            users: mockUserData
-        })
-})
 
+app.get('/users',function(req,res){
+	res.json({
+		success: true,
+		message: 'successfully got users. Nice!',
+		users: mockUserData
+	})
+})
+// colons are used as variables that be viewed in the params
 app.get('/users/:id',function(req,res){
 	console.log(req.params.id)
 	res.json({
@@ -25,29 +26,29 @@ app.get('/users/:id',function(req,res){
 	})
 })
 
-app.post('/login', function(req,res){
+app.post('/login',function(req,res){
+	// Typically passwords are encrypted using something like bcrypt before sending to database
+	const username=req.body.username;
+	const password=req.body.password;
 
-        const username = req.body.username;
-        const password = res.body.password;
+	// This should come from the database
+	const mockUsername="billyTheKid";
+	const mockPassword="superSecret";
 
-        const mockUsername="billyThekid";
-        const mockPassword="superSecret";
+	if (username===mockUsername && password===mockPassword){
+		// In practice, use JSON web token sign method here to make an encrypted token
+		res.json({
+			success: true,
+			message: 'password and username match!',
+			token: 'encrypted token goes here'
+		})
+	} else {
+		res.json({
+			success: false,
+			message: 'password and username do not match'
+		})
+	}
 
-        if(username==mockUsername && password==mockPassword){
-            res.json({
-                success: true,
-                message: 'password and username match!',
-                token: 'encrypted token goes here'
-            })
-        }else{
-            res.json({
-                success: false,
-                message: 'password or username is wrong!'
-            })
-        }
 })
 
-
-app.listen(8000,function(){
-    console.log("server is running")
-})
+app.listen(8000,function(){console.log('server is listening')})
